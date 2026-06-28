@@ -145,6 +145,99 @@ h2 {
   align-items: stretch;
 }
 
+.ranking-panel {
+  margin-top: 16px;
+  padding: 18px;
+  border-top: 1px solid rgba(144, 188, 169, 0.22);
+  border-bottom: 1px solid rgba(144, 188, 169, 0.14);
+  background: rgba(12, 17, 19, 0.72);
+}
+
+.ranking-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.ranking-count {
+  color: #87918d;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.prediction-list {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.prediction-row {
+  display: grid;
+  grid-template-columns: 36px minmax(150px, 0.55fr) minmax(220px, 1fr);
+  gap: 14px;
+  align-items: center;
+  min-height: 64px;
+  padding: 10px 14px;
+  background: #101719;
+}
+
+.prediction-rank {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: #07110d;
+  border-radius: 50%;
+  background: #78e5b8;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.prediction-name {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.prediction-name strong {
+  color: #ffffff;
+}
+
+.prediction-name span {
+  color: #a8b3ae;
+}
+
+.prediction-score {
+  display: grid;
+  grid-template-columns: minmax(80px, 1fr) 48px;
+  gap: 12px;
+  align-items: center;
+}
+
+.prediction-score strong {
+  color: #ffffff;
+  text-align: right;
+}
+
+.score-track {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.score-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #78e5b8, #caa256);
+}
+
 .panel {
   border: 1px solid rgba(144, 188, 169, 0.22);
   border-radius: 8px;
@@ -542,5 +635,26 @@ h2 {
 
   .file-row strong {
     max-width: 82vw;
+  }
+
+  .ranking-panel {
+    padding: 14px 0 0;
+  }
+
+  .ranking-heading {
+    align-items: flex-start;
+    padding: 0 12px;
+  }
+
+  .prediction-row {
+    grid-template-columns: 32px minmax(0, 1fr);
+  }
+
+  .prediction-name {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .prediction-score {
+    grid-column: 2;
   }
 }

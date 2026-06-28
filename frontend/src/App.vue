@@ -123,6 +123,32 @@
           </div>
         </section>
       </div>
+
+      <section v-if="topPredictions.length" class="ranking-panel" aria-label="Top model predictions">
+        <div class="ranking-heading">
+          <div>
+            <span class="section-kicker">Ranked outputs</span>
+            <h2>Top predictions</h2>
+          </div>
+          <span class="ranking-count">Top 3 of {{ Object.keys(result.probabilities).length }}</span>
+        </div>
+
+        <ol class="prediction-list">
+          <li v-for="prediction in topPredictions" :key="prediction.label" class="prediction-row">
+            <span class="prediction-rank">{{ prediction.rank }}</span>
+            <div class="prediction-name">
+              <strong>{{ prediction.diseaseClass }}</strong>
+              <span>{{ prediction.severity }}</span>
+            </div>
+            <div class="prediction-score">
+              <div class="score-track" aria-hidden="true">
+                <span :style="{ width: `${prediction.confidence * 100}%` }"></span>
+              </div>
+              <strong>{{ formatPercent(prediction.confidence) }}</strong>
+            </div>
+          </li>
+        </ol>
+      </section>
     </section>
   </main>
 </template>
@@ -154,6 +180,25 @@ const healthLabel = computed(() => {
   return labels[healthState.value]
 })
 const canSubmit = computed(() => Boolean(selectedFile.value) && backendReady.value)
+const topPredictions = computed(() => {
+  const probabilities = result.value?.probabilities
+  if (!probabilities) return []
+
+  return Object.entries(probabilities)
+    .filter(([, confidence]) => typeof confidence === 'number')
+    .sort(([, left], [, right]) => right - left)
+    .slice(0, 3)
+    .map(([label, confidence], index) => {
+      const [diseaseClass, severity] = splitCombinedLabel(label)
+      return {
+        rank: index + 1,
+        label,
+        diseaseClass,
+        severity,
+        confidence
+      }
+    })
+})
 
 onMounted(() => startHealthPolling())
 
@@ -245,5 +290,11 @@ function revokePreview() {
 function formatPercent(value) {
   if (typeof value !== 'number') return '0%'
   return `${Math.round(value * 100)}%`
+}
+
+function splitCombinedLabel(label) {
+  const separatorIndex = label.lastIndexOf('_')
+  if (separatorIndex < 1 || separatorIndex === label.length - 1) return [label, 'Unspecified']
+  return [label.slice(0, separatorIndex), label.slice(separatorIndex + 1)]
 }
 </script>
