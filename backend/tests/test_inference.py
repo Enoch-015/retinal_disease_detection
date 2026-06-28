@@ -3,7 +3,13 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from app.inference import CLASS_NAMES, InferenceError, ModelService, preprocess_image_bytes
+from app.inference import (
+    CLASS_NAMES,
+    InferenceError,
+    ModelService,
+    preprocess_image_bytes,
+    split_prediction_label,
+)
 
 
 def test_preprocess_image_bytes_builds_rgb_resnet_batch():
@@ -61,12 +67,26 @@ def test_predict_decodes_single_softmax_output():
 
     result = service.predict(_tiny_png_bytes())
 
-    assert result["disease_class"] == "AMD_Severe"
+    assert result["disease_class"] == "AMD"
+    assert result["severity"] == "Severe"
+    assert result["combined_label"] == "AMD_Severe"
     assert result["disease_confidence"] == pytest.approx(0.91)
     assert result["class_index"] == 2
     assert result["probabilities"]["AMD_Severe"] == pytest.approx(0.91)
     assert interpreter.invoked
     assert interpreter.input.shape == (1, 224, 224, 3)
+
+
+@pytest.mark.parametrize(
+    ("label", "expected"),
+    [
+        ("NO_Normal", ("NO", "Normal")),
+        ("RVO_Other", ("RVO", "Other")),
+        ("AMD_Moderate", ("AMD", "Moderate")),
+    ],
+)
+def test_split_prediction_label_uses_final_underscore(label, expected):
+    assert split_prediction_label(label) == expected
 
 
 class FakeInterpreter:

@@ -28,6 +28,13 @@ class InvalidImageError(ValueError):
     """Raised when uploaded bytes cannot be decoded as an image."""
 
 
+def split_prediction_label(label: str) -> tuple[str, str]:
+    disease_class, separator, severity = label.rpartition("_")
+    if not separator or not disease_class or not severity:
+        raise InferenceError(f"Invalid model label format: {label}.")
+    return disease_class, severity
+
+
 def preprocess_image_bytes(image_bytes: bytes):
     """Match check.ipynb input shape: RGB image, 224x224, float32 batch."""
     if not image_bytes:
@@ -163,9 +170,13 @@ class ModelService:
 
         class_idx = int(np.argmax(probs[0]))
         confidence = float(probs[0][class_idx])
+        combined_label = CLASS_NAMES[class_idx]
+        disease_class, severity = split_prediction_label(combined_label)
 
         return {
-            "disease_class": CLASS_NAMES[class_idx],
+            "disease_class": disease_class,
+            "severity": severity,
+            "combined_label": combined_label,
             "disease_confidence": confidence,
             "class_index": class_idx,
             "probabilities": {

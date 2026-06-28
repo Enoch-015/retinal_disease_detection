@@ -14,7 +14,7 @@
 
         <div class="quick-status" aria-label="System status">
           <span class="status-title">System profile</span>
-          <span class="quick-pill">oct_resnet50.keras</span>
+          <span class="quick-pill">oct_resnet50.tflite</span>
           <span class="quick-pill">224px RGB</span>
           <span class="quick-pill">Image only</span>
         </div>
@@ -89,10 +89,20 @@
           </div>
 
           <div v-if="result" class="results">
-            <div class="metric">
-              <span>Disease class</span>
-              <strong>{{ result.disease_class }}</strong>
-              <small>{{ formatPercent(result.disease_confidence) }} confidence</small>
+            <div class="result-metrics">
+              <div class="metric">
+                <span>Disease class</span>
+                <strong>{{ result.disease_class }}</strong>
+              </div>
+              <div class="metric">
+                <span>Severity</span>
+                <strong>{{ result.severity }}</strong>
+              </div>
+            </div>
+
+            <div class="confidence-line">
+              <span>Prediction confidence</span>
+              <strong>{{ formatPercent(result.disease_confidence) }}</strong>
             </div>
 
             <div v-if="result.warnings?.length" class="message warning-message">
