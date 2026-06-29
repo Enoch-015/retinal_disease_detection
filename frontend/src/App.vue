@@ -11,13 +11,6 @@
             </p>
           </div>
         </div>
-
-        <div class="quick-status" aria-label="System status">
-          <span class="status-title">System profile</span>
-          <span class="quick-pill">oct_resnet50.tflite</span>
-          <span class="quick-pill">224px RGB</span>
-          <span class="quick-pill">Image only</span>
-        </div>
       </div>
 
       <div class="tool-grid">
